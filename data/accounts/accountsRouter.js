@@ -45,6 +45,15 @@ router.put("/:id", async (req, res, next) => {
       name: req.body.name,
       budget: req.body.budget
     };
+
+    await db("accounts")
+      .where("id", req.params.id)
+      .update(payload);
+    res.json(
+      await db("accounts")
+        .where("id", req.params.id)
+        .first()
+    );
   } catch (err) {
     next(err);
   }
@@ -52,6 +61,10 @@ router.put("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   try {
+    await db("accounts")
+      .where("id", req.params.id)
+      .del();
+    res.status(204).end();
   } catch (err) {
     next(err);
   }
