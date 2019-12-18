@@ -12,6 +12,11 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
   try {
+    res.json(
+      await db("accounts")
+        .where("id", req.params.id)
+        .select()
+    );
   } catch (err) {
     next(err);
   }
@@ -19,6 +24,16 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
+    const payload = {
+      name: req.body.name,
+      budget: req.body.budget
+    };
+    const [id] = await db("accounts").insert(payload);
+    res.json(
+      await db("accounts")
+        .where("id", id)
+        .first()
+    );
   } catch (err) {
     next(err);
   }
@@ -26,6 +41,10 @@ router.post("/", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
+    const payload = {
+      name: req.body.name,
+      budget: req.body.budget
+    };
   } catch (err) {
     next(err);
   }
