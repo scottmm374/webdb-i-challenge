@@ -10,7 +10,7 @@
 
 -- List first 10 orders placed, sorted descending by the order date
 
- SELCT * FROM ORDERS ORDER BY OrderDate desc LIMIT 10;
+ SELECT * FROM ORDERS ORDER BY OrderDate desc LIMIT 10;
 
 -- Find all customers that live in London, Madrid, or Brazil
 

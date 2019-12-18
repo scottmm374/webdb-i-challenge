@@ -10,7 +10,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", validateAccountsId, async (req, res, next) => {
   try {
     res.json(
       await db("accounts")
@@ -28,7 +28,9 @@ router.post("/", async (req, res, next) => {
       name: req.body.name,
       budget: req.body.budget
     };
-    const [id] = await db("accounts").insert(payload);
+    await db("accounts")
+      .where("id", req.params.id)
+      .insert(payload);
     res.json(
       await db("accounts")
         .where("id", id)
@@ -39,7 +41,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", validateAccountsId, async (req, res, next) => {
   try {
     const payload = {
       name: req.body.name,
@@ -59,7 +61,7 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", validateAccountsId, async (req, res, next) => {
   try {
     await db("accounts")
       .where("id", req.params.id)
@@ -69,5 +71,21 @@ router.delete("/:id", async (req, res, next) => {
     next(err);
   }
 });
+
+// Middleware
+async function validateAccountsId(req, res, next) {
+  try {
+    const accounts = await db("accounts")
+      .where("id", req.params.id)
+      .first();
+    if (accounts) {
+      next();
+    } else {
+      res.status(404).json({ message: "Account not found" });
+    }
+  } catch (err) {
+    next(err);
+  }
+}
 
 module.exports = router;
