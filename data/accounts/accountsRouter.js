@@ -42,21 +42,6 @@ router.post("/", async (req, res, next) => {
     next(err);
   }
 });
-// router.post("/", async (req, res, next) => {
-//   try {
-//     const payload = {
-//       name: req.body.name,
-//       budget: req.body.budget
-//     };
-//     const ids = await db("accounts")
-//       .insert(payload)
-//       .where({ id: ids[0] });
-
-//     res.status(201).json(payload);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
 
 // EDIT/UPDATE ACCOUNT
 router.put("/:id", validateAccountsId, async (req, res, next) => {
