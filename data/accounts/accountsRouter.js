@@ -3,13 +3,13 @@ const db = require("../../data/dbConfig.js");
 const router = express.Router();
 
 // GET ALL ACCOUNTS
-// router.get("/", async (req, res, next) => {
-//   try {
-//     res.json(await db("accounts").select());
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+router.get("/", async (req, res, next) => {
+  try {
+    res.json(await db("accounts").select());
+  } catch (err) {
+    next(err);
+  }
+});
 
 // GET ACCOUNT BY ID
 router.get("/:id", validateAccountsId, async (req, res, next) => {
@@ -25,15 +25,14 @@ router.get("/:id", validateAccountsId, async (req, res, next) => {
 });
 
 // POST NEW ACCOUNT
+
 router.post("/", async (req, res, next) => {
   try {
     const payload = {
       name: req.body.name,
       budget: req.body.budget
     };
-    await db("accounts")
-      .where("id", req.params.id)
-      .insert(payload);
+    const [id] = await db("accounts").insert(payload);
     res.json(
       await db("accounts")
         .where("id", id)
@@ -43,6 +42,21 @@ router.post("/", async (req, res, next) => {
     next(err);
   }
 });
+// router.post("/", async (req, res, next) => {
+//   try {
+//     const payload = {
+//       name: req.body.name,
+//       budget: req.body.budget
+//     };
+//     const ids = await db("accounts")
+//       .insert(payload)
+//       .where({ id: ids[0] });
+
+//     res.status(201).json(payload);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 // EDIT/UPDATE ACCOUNT
 router.put("/:id", validateAccountsId, async (req, res, next) => {
